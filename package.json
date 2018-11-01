@@ -1,0 +1,48 @@
+{
+  "name": "payment",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "gulp",
+    "build": "next build && tsc --project tsconfig.server.json",
+    "start": "NODE_ENV=production node .next/production-server/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/skmdev/payment.git"
+  },
+  "author": "“skmdev29” <skmdev29@gmail.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/skmdev/payment/issues"
+  },
+  "homepage": "https://github.com/skmdev/payment#readme",
+  "dependencies": {
+    "@babel/core": "^7.1.2",
+    "@zeit/next-typescript": "1.1.1",
+    "babel-loader": "^8.0.4",
+    "credit-card-type": "^8.0.0",
+    "koa": "^2.6.1",
+    "koa-decorator-ts": "^2.3.0",
+    "next": "^7.0.2",
+    "react": "^16.6.0",
+    "react-dom": "^16.6.0",
+    "typescript": "latest",
+    "typescript-babel-jest": "^1.0.5"
+  },
+  "devDependencies": {
+    "@types/credit-card-type": "^7.0.0",
+    "@types/koa": "^2.0.46",
+    "@types/next": "^7.0.3",
+    "@types/react": "^16.4.16",
+    "del": "^3.0.0",
+    "gulp": "^3.9.1",
+    "gulp-nodemon": "^2.2.1",
+    "gulp-run-command": "0.0.9",
+    "gulp-ssh-deploy": "0.0.3",
+    "nodemon": "^1.18.4",
+    "run-sequence": "^2.2.1",
+    "ts-node": "^7.0.1"
+  }
+}
