@@ -1,4 +1,5 @@
 import * as Koa from 'koa';
+import * as bodyParser from 'koa-bodyparser';
 
 import Router from 'koa-decorator-ts/router';
 
@@ -16,8 +17,9 @@ class Server {
       apiDirPath: `${__dirname}/controllers`
     });
 
-    const middlewares = options.middlewares || [];
+    server.use(bodyParser()); // ctx.req.body
 
+    const middlewares = options.middlewares || [];
     for (const middleware of middlewares) {
       server.use(middleware);
     }
