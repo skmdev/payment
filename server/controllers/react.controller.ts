@@ -17,7 +17,7 @@ class ReactController {
   }
 
   @Route.get('*')
-  static async UnhandlePage(ctx: Context) {
+  static async HandlePage(ctx: Context) {
     const handle = ctx.next.getRequestHandler();
     await handle(ctx.req, ctx.res);
     ctx.respond = false;
