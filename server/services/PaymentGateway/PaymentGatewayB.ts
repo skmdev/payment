@@ -1,18 +1,38 @@
-import { IPaymentGateway, IPaymentStatus, IPaymentResponse } from './';
+import { IPaymentGateway, IPaymentResponse } from '../../interface';
+import { PaymentStatus, PaymentGatewayName } from '../../enum';
+import { getReferenceNumber } from '../../utils';
 
 class PaymentGatewayB implements IPaymentGateway {
-  public pay(): IPaymentResponse {
+  name: PaymentGatewayName;
+  isAvaliable: boolean = false;
+
+  constructor({ appKey, name }) {
+    console.log(`Payment Gateway B is authorized, key: ${appKey}`);
+    this.isAvaliable = true;
+    this.name = name;
+  }
+
+  public async pay(): Promise<IPaymentResponse> {
+    if (!this.isAvaliable) {
+      throw new Error(`Payment gateway ${this.name} is not avaliable`);
+    }
+    const paymentReference = getReferenceNumber();
+
     if (Math.floor(Math.random() * 100) % 2 === 0) {
       return {
-        status: IPaymentStatus.Success,
+        status: PaymentStatus.Success,
         msg: 'Success',
-        referenceNumber: '2'
+        paymentGateway: this.name,
+        paymentReference,
+        additionData: {}
       };
     } else {
       return {
-        status: IPaymentStatus.Failed,
+        status: PaymentStatus.Failed,
         msg: 'Failed',
-        referenceNumber: '1'
+        paymentGateway: this.name,
+        paymentReference,
+        additionData: {}
       };
     }
   }
