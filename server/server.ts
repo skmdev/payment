@@ -3,14 +3,13 @@ import * as bodyParser from 'koa-bodyparser';
 
 import Router from 'koa-decorator-ts/router';
 
-const port = 3000;
-
 interface IOptions {
+  port: number;
   middlewares?: Koa.Middleware[];
 }
 
 class Server {
-  static async init(options: IOptions = {}) {
+  static async init(options: IOptions = { port: 3000 }) {
     const server = new Koa();
     const router = new Router({
       app: server,
@@ -26,9 +25,7 @@ class Server {
 
     server.use(router.routes());
 
-    await server.listen(port);
-
-    console.log(`> Ready on http://localhost:${port}`);
+    await server.listen(options.port);
 
     return server;
   }
