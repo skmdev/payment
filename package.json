@@ -5,8 +5,9 @@
   "main": "index.js",
   "scripts": {
     "dev": "gulp",
-    "build": "next build && tsc --project tsconfig.server.json",
-    "start": "NODE_ENV=production node .next/production-server/index.js"
+    "build": "gulp build",
+    "build:next": "next build && tsc --project tsconfig.server.json",
+    "start": "NODE_ENV=production node .next/production-server/server/index.js"
   },
   "repository": {
     "type": "git",

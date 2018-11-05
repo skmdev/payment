@@ -34,7 +34,9 @@ const gulpConfig = {
 
 gulp.task('copyfile', () => {
   for (const fileUrl of gulpConfig.copyfiles) {
-    gulp.src(fileUrl, { base: './' }).pipe(gulp.dest('.next'));
+    gulp
+      .src(fileUrl, { base: './' })
+      .pipe(gulp.dest('.next/production-server'));
   }
 });
 
@@ -42,7 +44,7 @@ gulp.task('nodemon', () => {
   nodemon(gulpConfig.nodemon);
 });
 
-gulp.task('next', run('npm run build'));
+gulp.task('next', run('npm run build:next'));
 
 gulp.task('clean', () => del.sync(['.next/**']));
 
