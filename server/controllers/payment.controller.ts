@@ -1,9 +1,9 @@
 import { Context } from 'koa';
 import { Controller, Route, Required } from 'koa-decorator-ts';
-import { IPaymentDetail } from '../interface';
-import { PaymentStatus } from '../enum';
-import PaymentGatewayManager from '../services/PaymentGateway';
-import PaymentModel from '../models/payment.model';
+import { IPaymentDetail } from '../types/interface';
+import { PaymentStatus, Currency } from '../types/enum';
+import PaymentGateway from '../services/PaymentGateway';
+import Payment from '../services/Payment';
 
 @Controller('/api/payment')
 class PaymentController {
@@ -66,34 +66,32 @@ class PaymentController {
   })
   public static async submitPayment(ctx: Context) {
     const data = ctx.request.body as IPaymentDetail;
-    const { settlement, payment } = data;
 
-    // Get avaliable payment gateway
-    const paymentGateway = PaymentGatewayManager.getPaymentGateway({
-      payment,
-      settlement
-    });
+    if (!Currency[data.payment.currency]) {
+      ctx.throw(400, `Not support for currency: ${data.payment.currency}`);
+    }
 
     // Pay by payment gateway
-    const paymentResponse = await paymentGateway.pay(data);
+    const paymentResponse = await PaymentGateway.pay(data);
 
     // Store payment result in db
-    const paymentRecord = await PaymentModel.createPaymentRecord({
+    const paymentRecord = await Payment.storePaymentRecord({
       status: paymentResponse.status,
       customer: data.customer,
+      payment: data.payment,
       paymentGateway: paymentResponse.paymentGateway,
-      paymentReference: paymentResponse.paymentReference,
-      payment
+      paymentReference: paymentResponse.paymentReference
     });
 
     // Store payment result in redis
 
     // Set status
-    if (paymentResponse.status === PaymentStatus.Failed) {
+    if (paymentResponse.status !== PaymentStatus.Success) {
       ctx.status = 400;
     }
 
     ctx.body = {
+      message: paymentResponse.msg,
       data: {
         reference: paymentRecord.reference
       }
@@ -126,13 +124,14 @@ class PaymentController {
     const { reference } = ctx.params;
     const { customerName } = ctx.request.query;
 
-    const paymentRecord = await PaymentModel.getPaymentRecord({
-      customer: { name: customerName },
-      reference
-    });
+    const paymentRecord = await Payment.getPaymentRecord(reference);
 
     if (!paymentRecord) {
-      ctx.status = 404;
+      ctx.throw(404, 'Payment record not found');
+    }
+
+    if (paymentRecord.customer.name !== customerName) {
+      ctx.throw(404, 'Payment record not found');
     }
 
     ctx.body = {
