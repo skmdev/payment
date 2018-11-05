@@ -1,0 +1,5 @@
+{
+  "db": {
+    "url": "mongodb://payment:xyz123@ds151293.mlab.com:51293/payment"
+  }
+}
