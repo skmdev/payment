@@ -33,5 +33,6 @@ export interface IPaymentResponse {
 export interface IPaymentGateway {
   name: PaymentGatewayName;
   isAvaliable: boolean;
+  init(): Promise<this>;
   pay(paymentDetail: IPaymentDetail): Promise<IPaymentResponse>;
 }
