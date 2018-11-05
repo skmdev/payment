@@ -12,7 +12,7 @@ const gulpConfig = {
     script: 'server/index.ts',
     ext: 'ts',
     watch: ['server/**/*.ts'],
-    env: { NODE_ENV: 'development' },
+    env: { NODE_ENV: 'development', PRETTY: 'true' },
     execMap: {
       ts:
         'ts-node --files --typeCheck --compilerOptions \'{"module":"commonjs"}\''
