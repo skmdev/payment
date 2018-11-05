@@ -1,6 +1,6 @@
 import * as mongoose from 'mongoose';
 import { getReferenceNumber } from '../utils';
-import { PaymentStatus, PaymentGatewayName, Currency } from '../enum';
+import { PaymentStatus, PaymentGatewayName, Currency } from '../types/enum';
 
 export interface IPaymentModel extends mongoose.Document {
   reference: string;
@@ -44,7 +44,7 @@ const Schema = new mongoose.Schema(
 
 const PaymentModel = mongoose.model<IPaymentModel>('Payment', Schema);
 
-interface IPaymentRecordData {
+export interface IPaymentRecordData {
   status: PaymentStatus;
   paymentGateway: PaymentGatewayName;
   paymentReference: string;
@@ -56,13 +56,6 @@ interface IPaymentRecordData {
     amount: number;
     currency: string;
   };
-}
-
-interface IGetPaymentRecordOptions {
-  customer: {
-    name: string;
-  };
-  reference: string;
 }
 
 class Payment extends PaymentModel {
@@ -77,10 +70,9 @@ class Payment extends PaymentModel {
     return record.save();
   }
 
-  public static getPaymentRecord(options: IGetPaymentRecordOptions) {
+  public static getPaymentRecord(reference: string) {
     return this.findOne({
-      customer: options.customer,
-      reference: options.reference
+      reference
     });
   }
 }
