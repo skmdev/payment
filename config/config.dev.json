@@ -1,5 +1,17 @@
 {
+  "port": 3000,
   "db": {
     "url": "mongodb://payment:xyz123@ds151293.mlab.com:51293/payment"
+  },
+  "redis": {
+    "host": "127.0.0.1",
+    "port": 6379,
+    "expireTime": 10
+  },
+  "paypal": {
+    "key": "test-key-paypal"
+  },
+  "braintree": {
+    "key": "test-key-braintree"
   }
 }

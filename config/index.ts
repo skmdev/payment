@@ -1,8 +1,20 @@
 export interface IConfig {
+  port: number;
   db: {
     url: string;
     reconnectTries?: number;
     reconnectInterval?: number;
+  };
+  redis: {
+    host: string;
+    port: number;
+    expireTime?: number;
+  };
+  paypal: {
+    key: string;
+  };
+  braintree: {
+    key: string;
   };
 }
 
