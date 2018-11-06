@@ -27,12 +27,9 @@ class CreditCardForm extends React.Component<IProps> {
             ]
           })(<Input placeholder="Please input card holder name" />)}
         </FormItem>
-        <FormItem {...formItemLayout} label="Credit Card Number">
+        <FormItem {...formItemLayout} label="Credit Card Number" required>
           {getFieldDecorator('number', {
             rules: [
-              {
-                required: true
-              },
               {
                 validator: (rule, value, callback) => {
                   const cardNumber = value.replace(/\s/g, '');
@@ -51,19 +48,40 @@ class CreditCardForm extends React.Component<IProps> {
         </FormItem>
         <Row gutter={8}>
           <Col span={12}>
-            <FormItem {...formItemLayout} label="Valid Date">
+            <FormItem {...formItemLayout} label="Valid Date" required>
               {getFieldDecorator('exp', {
                 rules: [
                   {
-                    required: true,
-                    message: 'Please input a valid date'
+                    validator: (rule, value, callback) => {
+                      const [month, year] = value.split('/');
+                      if (!year) {
+                        callback('Please input a valid date');
+                      }
+                      if (parseInt(year) < 18 || parseInt(year) > 28) {
+                        callback('Please input a valid date');
+                      }
+                      if (parseInt(month) < 1 || parseInt(month) > 12) {
+                        callback('Please input a valid date');
+                      }
+                      callback();
+                    }
                   }
-                ]
+                ],
+                normalize: (value = '', prevValue = '') => {
+                  const tempValue = value.replace('/', '');
+                  if (tempValue.length > 4 || isNaN(parseInt(tempValue || 0))) {
+                    return prevValue;
+                  }
+                  if (prevValue.length >= value.length) {
+                    return value;
+                  }
+                  return tempValue.replace(/(..)/, '$1/');
+                }
               })(<Input placeholder="Month/Year" />)}
             </FormItem>
           </Col>
           <Col span={12}>
-            <FormItem {...formItemLayout} label="CCV">
+            <FormItem {...formItemLayout} label="CCV" required>
               {getFieldDecorator('CCV', {
                 rules: [
                   {
@@ -71,12 +89,15 @@ class CreditCardForm extends React.Component<IProps> {
                     message: 'Please input a valid CCV'
                   }
                 ],
-                normalize: (value, prevValue = '') => {
-                  const formattedValue = `${parseInt(value || 0) || ''}`;
-                  if (formattedValue.length > 4) {
+                normalize: (value = '', prevValue = '') => {
+                  const tempValue = parseInt(value || 0);
+                  if (isNaN(tempValue)) {
                     return prevValue;
                   }
-                  return formattedValue;
+                  if (value.length > 4) {
+                    return prevValue;
+                  }
+                  return value;
                 }
               })(<Input placeholder="Please input CCV" />)}
             </FormItem>

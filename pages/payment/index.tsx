@@ -1,11 +1,12 @@
 import React from 'react';
-import { Button, Steps, message } from 'antd';
-import OrderForm from '../components/OrderForm';
+import { Button, Steps, message, Icon } from 'antd';
+
 import { Currency } from '../../server/types/enum';
 
-import './index.less';
+import OrderForm from '../components/OrderForm';
 import CreditCardForm from '../components/CreditCardForm';
-import { string, number } from 'prop-types';
+
+import './index.less';
 
 const Step = Steps.Step;
 
@@ -30,6 +31,7 @@ interface IState {
       CCV: string;
     };
   };
+  isSubmittingPayment: boolean;
 }
 
 class PaymentPage extends React.Component<any, IState> {
@@ -53,7 +55,8 @@ class PaymentPage extends React.Component<any, IState> {
         },
         CCV: ''
       }
-    }
+    },
+    isSubmittingPayment: false
   };
 
   orderForm = React.createRef<any>();
@@ -80,7 +83,6 @@ class PaymentPage extends React.Component<any, IState> {
               amount: values.price.amount
             }
           };
-          console.log(data);
         });
         break;
       case 1:
@@ -92,25 +94,30 @@ class PaymentPage extends React.Component<any, IState> {
           if (err) {
             return;
           }
-          console.log(values);
           const current = this.state.current + 1;
+          const [month, year] = values.exp.split('/');
           data = {
             current,
             settlement: {
               card: {
-                holderName: '',
-                number: '',
+                holderName: values.holderName,
+                number: values.number,
                 exp: {
-                  month: '',
-                  year: ''
+                  month,
+                  year
                 },
-                CCV: ''
+                CCV: values.CCV
               }
-            }
+            },
+            isSubmittingPayment: true
           };
         });
     }
-    this.setState(data as Pick<IState, keyof IState>);
+    this.setState(data as Pick<IState, keyof IState>, () => {
+      console.log(this.state);
+      if (this.state.current === 2) {
+      }
+    });
   }
 
   prev() {
@@ -132,14 +139,17 @@ class PaymentPage extends React.Component<any, IState> {
         content: <CreditCardForm wrappedComponentRef={this.creditCardForm} />
       },
       {
-        title: 'Result',
-        Content: 'Last-content'
+        title: 'Submit',
+        Content: 'Last-content',
+        icon: this.state.isSubmittingPayment && <Icon type="loading" />
       }
     ];
     return (
       <div className="payment-step-container">
         <Steps current={current}>
-          {steps.map((item) => <Step key={item.title} title={item.title} />)}
+          {steps.map((item) => (
+            <Step key={item.title} title={item.title} icon={item.icon} />
+          ))}
         </Steps>
         <div className="steps-content">{steps[current].content}</div>
         <div className="steps-action">
