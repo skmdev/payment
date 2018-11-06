@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Steps, message, Icon, Modal } from 'antd';
+import { Button, Steps, Icon, Modal } from 'antd';
 import Link from 'next/link';
 
 import { Currency } from '../../server/types/enum';
