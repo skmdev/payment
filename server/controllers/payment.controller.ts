@@ -49,7 +49,15 @@ class PaymentController {
                   type: 'string'
                 },
                 exp: {
-                  type: 'string'
+                  type: 'object',
+                  properties: {
+                    month: {
+                      type: 'string'
+                    },
+                    year: {
+                      type: 'string'
+                    }
+                  }
                 },
                 CCV: {
                   type: 'string'

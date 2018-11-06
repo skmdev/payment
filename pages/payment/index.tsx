@@ -1,5 +1,6 @@
 import React from 'react';
-import { Button, Steps, message, Icon } from 'antd';
+import { Button, Steps, message, Icon, Modal } from 'antd';
+import Link from 'next/link';
 
 import { Currency } from '../../server/types/enum';
 
@@ -7,6 +8,7 @@ import OrderForm from '../components/OrderForm';
 import CreditCardForm from '../components/CreditCardForm';
 
 import './index.less';
+import { submitPayment } from '../services/payment';
 
 const Step = Steps.Step;
 
@@ -56,6 +58,7 @@ class PaymentPage extends React.Component<any, IState> {
         CCV: ''
       }
     },
+    paymentStatus: {},
     isSubmittingPayment: false
   };
 
@@ -113,9 +116,30 @@ class PaymentPage extends React.Component<any, IState> {
           };
         });
     }
-    this.setState(data as Pick<IState, keyof IState>, () => {
+    this.setState(data as Pick<IState, keyof IState>, async () => {
       console.log(this.state);
       if (this.state.current === 2) {
+        try {
+          const response = await submitPayment(this.state);
+          Modal.success({
+            title: 'Pay Successful!',
+            content: `reference number: ${response.data.data.reference}`
+          });
+        } catch (e) {
+          Modal.error({
+            title: 'Pay Unsuccessful',
+            content: (
+              <div>
+                <p>message: {e.response.data.message}</p>
+                <p>reference number: {e.response.data.data.reference}</p>
+              </div>
+            )
+          });
+        } finally {
+          this.setState({
+            isSubmittingPayment: false
+          });
+        }
       }
     });
   }
@@ -163,15 +187,14 @@ class PaymentPage extends React.Component<any, IState> {
             </Button>
           )}
           {current === steps.length - 1 && (
-            <Button
-              style={{ width: '100%' }}
-              type="primary"
-              onClick={() => message.success('Processing complete!')}
-            >
-              Done
-            </Button>
+            <Link href="/">
+              <Button style={{ width: '100%' }} type="primary">
+                Back to home page
+              </Button>
+            </Link>
           )}
-          {current > 0 && (
+          {current > 0 &&
+          current !== steps.length - 1 && (
             <Button
               style={{ marginTop: '8px', width: '100%' }}
               onClick={() => this.prev()}

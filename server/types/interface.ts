@@ -15,7 +15,10 @@ export interface IPaymentDetail {
     card?: {
       holderName: string;
       number: string;
-      exp: string;
+      exp: {
+        month: string;
+        year: string;
+      };
       CCV: string;
     };
     [key: string]: any; // for extends use
