@@ -1,4 +1,4 @@
-import * as redis from 'redis';
+import redis from 'redis';
 import { promisify } from 'util';
 import Config from '../../config';
 import Logger from './Logger';
@@ -31,12 +31,12 @@ class Redis {
     this.logger.info('Connecting to Redis...');
 
     return new Promise((resolve, reject) => {
-      this.client.on('connect', () => {
+      this.client!.on('connect', () => {
         this.logger.info('Connected to Redis');
         resolve(this.client);
       });
 
-      this.client.on('error', (err) => {
+      this.client!.on('error', (err) => {
         reject('Something went wrong ' + err);
       });
     });

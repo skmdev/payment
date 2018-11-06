@@ -13,11 +13,12 @@
     "preserveConstEnums": true,
     "sourceMap": true,
     "skipLibCheck": true,
+    "esModuleInterop": true,
     "experimentalDecorators": true,
     "baseUrl": ".",
     "paths": {
       "*": [
-          "server/types/*"
+        "src/types/*"
       ]
     },
     "typeRoots": [
@@ -31,5 +32,8 @@
   },
   "include": [
     "server/**/*",
+  ],
+  "exclude": [
+    "test"
   ]
 }

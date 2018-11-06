@@ -1,4 +1,4 @@
-import * as creditCardType from 'credit-card-type';
+import creditCardType from 'credit-card-type';
 import { PaymentGatewayName, Currency } from '../../types/enum';
 import { IPaymentGateway, IPaymentDetail } from '../../types/interface';
 import PaymentGatewayA from './PaymentGatewayA';
@@ -13,7 +13,13 @@ interface IData {
   };
   settlement: {
     card?: {
-      number;
+      holderName: string;
+      number: string;
+      exp: {
+        month: string;
+        year: string;
+      };
+      CCV: string;
     };
   };
 }

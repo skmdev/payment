@@ -1,4 +1,4 @@
-import * as Pino from 'pino';
+import Pino from 'pino';
 
 export type TLogger = Pino.Logger;
 

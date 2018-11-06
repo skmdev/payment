@@ -1,6 +1,6 @@
-import * as uniqid from 'uniqid';
-import * as creditCardType from 'credit-card-type';
-import * as valid from 'card-validator';
+import uniqid from 'uniqid';
+import creditCardType from 'credit-card-type';
+import valid from 'card-validator';
 
 export function getReferenceNumber() {
   return uniqid().toLocaleUpperCase();

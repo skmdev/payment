@@ -1,4 +1,4 @@
-import * as mongoose from 'mongoose';
+import mongoose from 'mongoose';
 import { getReferenceNumber } from '../utils';
 import { PaymentStatus, PaymentGatewayName, Currency } from '../types/enum';
 
