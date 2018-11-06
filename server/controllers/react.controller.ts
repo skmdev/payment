@@ -5,14 +5,14 @@ import { Context } from 'koa';
 class ReactController {
   @Route.get('/payment')
   static async Paymentpage(ctx: Context) {
-    console.log(ctx.next);
-    await ctx.next.render(ctx.req, ctx.res, '/a', ctx.query);
+    console.log('test');
+    await ctx.next.render(ctx.req, ctx.res, '/payment', ctx.query);
     ctx.respond = false;
   }
 
   @Route.get('/payment/search')
   static async PaymentSearchPage(ctx: Context) {
-    await ctx.next.render(ctx.req, ctx.res, '/b', ctx.query);
+    await ctx.next.render(ctx.req, ctx.res, '/paymentSearch', ctx.query);
     ctx.respond = false;
   }
 
