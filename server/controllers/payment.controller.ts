@@ -2,6 +2,7 @@ import { Context } from 'koa';
 import { Controller, Route, Required } from 'koa-decorator-ts';
 import { IPaymentDetail } from '../types/interface';
 import { PaymentStatus, Currency } from '../types/enum';
+import { isCreditCardValid } from '../utils';
 import PaymentGateway from '../services/PaymentGateway';
 import Payment from '../services/Payment';
 
@@ -77,6 +78,13 @@ class PaymentController {
 
     if (!Currency[data.payment.currency]) {
       ctx.throw(400, `Not support for currency: ${data.payment.currency}`);
+    }
+
+    if (
+      data.settlement.card &&
+      !isCreditCardValid(data.settlement.card.number)
+    ) {
+      ctx.throw(400, `Credit card number is not valid`);
     }
 
     // Pay by payment gateway
