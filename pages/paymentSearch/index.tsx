@@ -49,21 +49,20 @@ class PaymentSearchPage extends React.Component<IProps, IState> {
             return;
           }
           console.log('Received values of form: ', values);
-
+          let paymentRecord = undefined;
           try {
             const response = await searchPayment({
               reference: values.reference,
               customerName: values.customerName
             });
-            this.setState({
-              paymentRecord: response.data.data
-            });
+            paymentRecord = response.data.data;
           } catch (e) {
             Modal.error({
               title: 'Not Found'
             });
           } finally {
             this.setState({
+              paymentRecord,
               isSearching: false
             });
           }

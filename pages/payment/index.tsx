@@ -126,11 +126,14 @@ class PaymentPage extends React.Component<any, IState> {
             content: `reference number: ${response.data.data.reference}`
           });
         } catch (e) {
+          const message = e.response
+            ? e.response.data.message
+            : 'server or network error';
           Modal.error({
             title: 'Pay Unsuccessful',
             content: (
               <div>
-                <p>message: {e.response.data.message}</p>
+                <p>message: {message}</p>
                 <p>reference number: {e.response.data.data.reference}</p>
               </div>
             )
