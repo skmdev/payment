@@ -1,10 +1,12 @@
 import React from 'react';
-import { Form, Row, Col, Input, Button, Divider, Modal } from 'antd';
-import { FormComponentProps } from 'antd/lib/form';
 import Link from 'next/link';
 
-import './index.less';
+import { Form, Row, Col, Input, Button, Divider, Modal } from 'antd';
+import { FormComponentProps } from 'antd/lib/form';
+
 import { searchPayment } from '../services/payment';
+
+import './index.less';
 
 const FormItem = Form.Item;
 

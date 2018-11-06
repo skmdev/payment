@@ -1,14 +1,14 @@
 import React from 'react';
-import { Button, Steps, Icon, Modal } from 'antd';
 import Link from 'next/link';
+import { Button, Steps, Icon, Modal } from 'antd';
 
 import { Currency } from '../../server/types/enum';
+import { submitPayment } from '../services/payment';
 
 import OrderForm from '../components/OrderForm';
 import CreditCardForm from '../components/CreditCardForm';
 
 import './index.less';
-import { submitPayment } from '../services/payment';
 
 const Step = Steps.Step;
 
