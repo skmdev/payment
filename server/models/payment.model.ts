@@ -7,6 +7,7 @@ export interface IPaymentModel extends mongoose.Document {
   status: PaymentStatus;
   paymentGateway: PaymentGatewayName;
   paymentReference: string;
+  paymentGatewayResponse: any;
   customer: {
     name: string;
     phone: string;
@@ -23,6 +24,7 @@ const Schema = new mongoose.Schema(
     status: Number, // 0 1 2
     paymentGateway: String,
     paymentReference: String,
+    paymentGatewayResponse: mongoose.Schema.Types.Mixed,
     customer: {
       name: String,
       phone: String
@@ -48,6 +50,7 @@ export interface IPaymentRecordData {
   status: PaymentStatus;
   paymentGateway: PaymentGatewayName;
   paymentReference: string;
+  paymentGatewayResponse?: any;
   customer: {
     name: string;
     phone: string;
@@ -64,6 +67,7 @@ class Payment extends PaymentModel {
       reference: getReferenceNumber(),
       paymentGateway: data.paymentGateway,
       paymentReference: data.paymentReference,
+      paymentGatewayResponse: data.paymentGatewayResponse,
       customer: data.customer,
       payment: data.payment
     });

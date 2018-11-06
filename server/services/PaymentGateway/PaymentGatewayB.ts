@@ -29,7 +29,9 @@ class PaymentGatewayB implements IPaymentGateway {
         msg: 'Success',
         paymentGateway: this.name,
         paymentReference,
-        additionData: {}
+        paymentGatewayResponse: {
+          status: 200
+        }
       };
     } else {
       return {
@@ -37,7 +39,9 @@ class PaymentGatewayB implements IPaymentGateway {
         msg: 'Failed',
         paymentGateway: this.name,
         paymentReference,
-        additionData: {}
+        paymentGatewayResponse: {
+          status: 400
+        }
       };
     }
   }

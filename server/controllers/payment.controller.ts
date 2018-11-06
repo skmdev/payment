@@ -88,7 +88,8 @@ class PaymentController {
       customer: data.customer,
       payment: data.payment,
       paymentGateway: paymentResponse.paymentGateway,
-      paymentReference: paymentResponse.paymentReference
+      paymentReference: paymentResponse.paymentReference,
+      paymentGatewayResponse: paymentResponse.paymentGatewayResponse
     });
 
     // Store payment result in redis

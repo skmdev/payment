@@ -30,7 +30,7 @@ export interface IPaymentResponse {
   paymentGateway: PaymentGatewayName;
   paymentReference: string;
   msg: string;
-  additionData?: any;
+  paymentGatewayResponse?: any;
 }
 
 export interface IPaymentGateway {

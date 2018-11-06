@@ -30,8 +30,8 @@ class PaymentGatewayA implements IPaymentGateway {
         msg: 'Success',
         paymentGateway: this.name,
         paymentReference,
-        additionData: {
-          //
+        paymentGatewayResponse: {
+          status: 200
         }
       };
     } else {
@@ -39,7 +39,10 @@ class PaymentGatewayA implements IPaymentGateway {
         status: PaymentStatus.Failed,
         msg: 'Failed',
         paymentGateway: this.name,
-        paymentReference
+        paymentReference,
+        paymentGatewayResponse: {
+          status: 400
+        }
       };
     }
   }
