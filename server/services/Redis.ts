@@ -1,6 +1,6 @@
 import * as redis from 'redis';
 import { promisify } from 'util';
-import Config from '../config';
+import Config from '../../config';
 import Logger from './Logger';
 
 class Redis {

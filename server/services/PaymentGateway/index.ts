@@ -4,7 +4,7 @@ import { IPaymentGateway, IPaymentDetail } from '../../types/interface';
 import PaymentGatewayA from './PaymentGatewayA';
 import PaymentGatewayB from './PaymentGatewayB';
 import Logger from '../Logger';
-import Config from '../../config';
+import Config from '../../../config';
 
 interface IData {
   payment: {

@@ -2,7 +2,7 @@ import * as next from 'next';
 import Server from './server';
 import PaymentGatewayManager from './services/PaymentGateway';
 import Database from './services/Database';
-import Config from './config';
+import Config from '../config';
 import Redis from './services/Redis';
 import Logger from './services/Logger';
 

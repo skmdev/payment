@@ -18,7 +18,7 @@ const gulpConfig = {
         'ts-node --files --typeCheck --compilerOptions \'{"module":"commonjs"}\''
     }
   },
-  copyfiles: ['package.json', 'config/*.json', 'pm2.dev.config.json'],
+  copyfiles: ['package.json', './config/*.json', 'pm2.dev.config.json'],
   sshDeploy: {
     host: 'localhost',
     port: 22,

@@ -1,5 +1,5 @@
 import * as mongoose from 'mongoose';
-import { IConfig } from '../config';
+import { IConfig } from '../../config';
 import Logger from './Logger';
 
 mongoose.set('useCreateIndex', true);
