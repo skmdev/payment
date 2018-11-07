@@ -2,13 +2,12 @@ import { Context } from 'koa';
 import { Controller, Route, Required } from 'koa-decorator-ts';
 import { IPaymentDetail } from '../types/interface';
 import { PaymentStatus, Currency } from '../types/enum';
-import { isCreditCardValid } from '../utils';
+import { isCreditCardValid, getAvailableYear, getAvailableMonth } from '../utils';
 import PaymentGateway from '../services/PaymentGateway';
 import Payment from '../services/Payment';
 
 @Controller('/api/payment')
 class PaymentController {
-  @Route.post('/')
   @Required({
     body: {
       type: 'object',
@@ -17,25 +16,25 @@ class PaymentController {
           type: 'object',
           properties: {
             name: {
-              type: 'string'
+              type: 'string',
             },
             phone: {
-              type: 'string'
-            }
+              type: 'string',
+            },
           },
-          required: ['name', 'phone']
+          required: [ 'name', 'phone' ],
         },
         payment: {
           type: 'object',
           properties: {
             amount: {
-              type: 'number'
+              type: 'number',
             },
             currency: {
-              type: 'string'
-            }
+              type: 'string',
+            },
           },
-          required: ['amount', 'currency']
+          required: [ 'amount', 'currency' ],
         },
         settlement: {
           type: 'object',
@@ -44,35 +43,36 @@ class PaymentController {
               type: 'object',
               properties: {
                 holderName: {
-                  type: 'string'
+                  type: 'string',
                 },
                 number: {
-                  type: 'string'
+                  type: 'string',
                 },
                 exp: {
                   type: 'object',
                   properties: {
                     month: {
-                      type: 'string'
+                      type: 'string',
                     },
                     year: {
-                      type: 'string'
-                    }
-                  }
+                      type: 'string',
+                    },
+                  },
                 },
                 CCV: {
-                  type: 'string'
-                }
+                  type: 'string',
+                },
               },
-              required: ['holderName', 'number', 'exp', 'CCV']
-            }
+              required: [ 'holderName', 'number', 'exp', 'CCV' ],
+            },
           },
-          required: ['card']
-        }
+          required: [ 'card' ],
+        },
       },
-      required: ['customer', 'payment', 'settlement']
-    }
+      required: [ 'customer', 'payment', 'settlement' ],
+    },
   })
+  @Route.post('/')
   public static async submitPayment(ctx: Context) {
     const data = ctx.request.body as IPaymentDetail;
 
@@ -80,11 +80,17 @@ class PaymentController {
       ctx.throw(400, `Not support for currency: ${data.payment.currency}`);
     }
 
-    if (
-      data.settlement.card &&
-      !isCreditCardValid(data.settlement.card.number)
-    ) {
-      ctx.throw(400, `Credit card number is not valid`);
+    if (data.settlement.card) {
+      if (!isCreditCardValid(data.settlement.card.number)) {
+        ctx.throw(400, `Credit card number is not valid`);
+      }
+
+      if (
+        getAvailableYear().indexOf(parseInt(data.settlement.card.exp.year)) === -1 ||
+        getAvailableMonth().indexOf(parseInt(data.settlement.card.exp.month)) === -1
+      ) {
+        ctx.throw(400, `Credit card exp is not valid`);
+      }
     }
 
     // Pay by payment gateway
@@ -97,7 +103,7 @@ class PaymentController {
       payment: data.payment,
       paymentGateway: paymentResponse.paymentGateway,
       paymentReference: paymentResponse.paymentReference,
-      paymentGatewayResponse: paymentResponse.paymentGatewayResponse
+      paymentGatewayResponse: paymentResponse.paymentGatewayResponse,
     });
 
     // Store payment result in redis
@@ -110,33 +116,33 @@ class PaymentController {
     ctx.body = {
       message: paymentResponse.msg,
       data: {
-        reference: paymentRecord.reference
-      }
+        reference: paymentRecord.reference,
+      },
     };
     // Todo
   }
 
-  @Route.get('/:reference')
   @Required({
     params: {
       type: 'object',
       properties: {
         reference: {
-          type: 'string'
-        }
+          type: 'string',
+        },
       },
-      required: ['reference']
+      required: [ 'reference' ],
     },
     query: {
       type: 'object',
       properties: {
         customerName: {
-          type: 'string'
-        }
+          type: 'string',
+        },
       },
-      required: ['customerName']
-    }
+      required: [ 'customerName' ],
+    },
   })
+  @Route.get('/:reference')
   public static async searchPaymentRecord(ctx: Context) {
     const { reference } = ctx.params;
     const { customerName } = ctx.request.query;
@@ -155,13 +161,13 @@ class PaymentController {
       data: {
         customer: {
           name: paymentRecord.customer.name,
-          phone: paymentRecord.customer.phone
+          phone: paymentRecord.customer.phone,
         },
         payment: {
           amount: paymentRecord.payment.amount,
-          currency: paymentRecord.payment.currency
-        }
-      }
+          currency: paymentRecord.payment.currency,
+        },
+      },
     };
   }
 }

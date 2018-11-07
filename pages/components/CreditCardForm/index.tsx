@@ -1,13 +1,18 @@
 import * as React from 'react';
 import { Form, Input, Row, Col } from 'antd';
 import { FormComponentProps } from 'antd/lib/form';
-import { prettyCardNumber, isCreditCardValid } from '../../../server/utils';
+import {
+  prettyCardNumber,
+  isCreditCardValid,
+  getAvailableYear,
+  getAvailableMonth,
+} from '../../../server/utils';
 
 const FormItem = Form.Item;
 
 const formItemLayout = {
   labelCol: { span: 24 },
-  wrapperCol: { span: 24 }
+  wrapperCol: { span: 24 },
 };
 
 interface IProps extends FormComponentProps {}
@@ -22,9 +27,9 @@ class CreditCardForm extends React.Component<IProps> {
             rules: [
               {
                 required: true,
-                message: 'Please input credit card holder name'
-              }
-            ]
+                message: 'Please input credit card holder name',
+              },
+            ],
           })(<Input placeholder="Please input card holder name" />)}
         </FormItem>
         <FormItem {...formItemLayout} label="Credit Card Number" required>
@@ -37,13 +42,13 @@ class CreditCardForm extends React.Component<IProps> {
                     callback('Please input a valid credit card number');
                   }
                   callback();
-                }
-              }
+                },
+              },
             ],
             normalize: (value = '') => {
               const cardNumber = value.replace(/\s/g, '');
               return prettyCardNumber(cardNumber);
-            }
+            },
           })(<Input placeholder="Please input credit card number" />)}
         </FormItem>
         <Row gutter={8}>
@@ -53,19 +58,19 @@ class CreditCardForm extends React.Component<IProps> {
                 rules: [
                   {
                     validator: (rule, value, callback) => {
-                      const [month, year] = value.split('/');
+                      const [ month, year ] = value.split('/');
                       if (!year) {
                         callback('Please input a valid date');
                       }
-                      if (parseInt(year) < 18 || parseInt(year) > 28) {
+                      if (getAvailableYear().indexOf(parseInt(year)) === -1) {
                         callback('Please input a valid date');
                       }
-                      if (parseInt(month) < 1 || parseInt(month) > 12) {
+                      if (getAvailableMonth().indexOf(parseInt(month)) === -1) {
                         callback('Please input a valid date');
                       }
                       callback();
-                    }
-                  }
+                    },
+                  },
                 ],
                 normalize: (value = '', prevValue = '') => {
                   const tempValue = value.replace('/', '');
@@ -76,7 +81,7 @@ class CreditCardForm extends React.Component<IProps> {
                     return value;
                   }
                   return tempValue.replace(/(..)/, '$1/');
-                }
+                },
               })(<Input placeholder="Month/Year" />)}
             </FormItem>
           </Col>
@@ -86,8 +91,8 @@ class CreditCardForm extends React.Component<IProps> {
                 rules: [
                   {
                     required: true,
-                    message: 'Please input a valid CCV'
-                  }
+                    message: 'Please input a valid CCV',
+                  },
                 ],
                 normalize: (value = '', prevValue = '') => {
                   const tempValue = parseInt(value || 0);
@@ -98,7 +103,7 @@ class CreditCardForm extends React.Component<IProps> {
                     return prevValue;
                   }
                   return value;
-                }
+                },
               })(<Input placeholder="Please input CCV" />)}
             </FormItem>
           </Col>

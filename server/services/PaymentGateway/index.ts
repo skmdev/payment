@@ -29,23 +29,25 @@ class PaymentGatewayManager {
   private static paymentGateway: { [key: string]: IPaymentGateway } = {
     [PaymentGatewayName.A]: new PaymentGatewayA({
       name: PaymentGatewayName.A,
-      ...Config.paypal
+      ...Config.paypal,
     }),
     [PaymentGatewayName.B]: new PaymentGatewayB({
       name: PaymentGatewayName.B,
-      ...Config.braintree
-    })
+      ...Config.braintree,
+    }),
   };
 
   public static async init() {
     for (const key of Object.keys(this.paymentGateway)) {
-      const paymentGateway = await this.paymentGateway[key].init();
-      if (paymentGateway.isAvaliable) {
-        this.logger.info(`Payment Gateway ${paymentGateway.name} is avaliable`);
-      } else {
-        this.logger.error(
-          `Payment Gateway ${paymentGateway.name} is not avaliable`
-        );
+      try {
+        const paymentGateway = await this.paymentGateway[key].init();
+        if (paymentGateway.isAvaliable) {
+          this.logger.info(`Payment Gateway ${key} is avaliable`);
+        } else {
+          this.logger.error(`Payment Gateway ${key} is not avaliable`);
+        }
+      } catch (e) {
+        this.logger.error(`Payment Gateway ${key} got error when initalize`);
       }
     }
   }
@@ -70,13 +72,9 @@ class PaymentGatewayManager {
 
       // If currency is USD, AUD, EUR, JPY, CNY, then use Gateway A. Otherwise use Gateway B
       if (
-        [
-          Currency.USD,
-          Currency.AUD,
-          Currency.EUR,
-          Currency.JPY,
-          Currency.CNY
-        ].indexOf(data.payment.currency) > -1
+        [ Currency.USD, Currency.AUD, Currency.EUR, Currency.JPY, Currency.CNY ].indexOf(
+          data.payment.currency
+        ) > -1
       ) {
         return PaymentGatewayManager.paymentGateway[PaymentGatewayName.A];
       } else {

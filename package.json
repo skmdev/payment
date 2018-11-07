@@ -21,7 +21,6 @@
   "homepage": "https://github.com/skmdev/payment#readme",
   "dependencies": {
     "@babel/core": "^7.1.2",
-    "@types/axios": "^0.14.0",
     "@zeit/next-less": "^1.0.1",
     "@zeit/next-typescript": "1.1.1",
     "antd": "^3.10.4",
@@ -48,7 +47,7 @@
     "uniqid": "^5.0.3"
   },
   "devDependencies": {
-    "@babel/plugin-proposal-decorators": "^7.1.2",
+    "@types/axios": "^0.14.0",
     "@types/card-validator": "^4.1.0",
     "@types/credit-card-type": "^7.0.0",
     "@types/koa": "^2.0.46",
@@ -57,6 +56,7 @@
     "@types/mongoose": "^5.3.0",
     "@types/next": "^7.0.3",
     "@types/pino": "^5.8.0",
+    "@babel/plugin-proposal-decorators": "^7.1.2",
     "@types/react": "^16.4.16",
     "@types/redis": "^2.8.7",
     "@types/uniqid": "^4.1.2",
