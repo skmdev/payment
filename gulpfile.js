@@ -2,7 +2,6 @@ const gulp = require('gulp');
 const runSequence = require('run-sequence');
 const nodemon = require('gulp-nodemon');
 const del = require('del');
-const { GulpSSHDeploy } = require('gulp-ssh-deploy');
 
 const run = require('gulp-run-command').default;
 
@@ -18,18 +17,7 @@ const gulpConfig = {
         'ts-node --files --typeCheck --compilerOptions \'{"module":"commonjs"}\''
     }
   },
-  copyfiles: ['package.json', './config/*.json', 'pm2.dev.config.json'],
-  sshDeploy: {
-    host: 'localhost',
-    port: 22,
-    package_json_file_path: 'package.json',
-    source_files: './dist/**/*',
-    remote_directory: 'path to deploy',
-    username: '',
-    ssh_key_file: '~/.ssh/id_rsa',
-    releases_to_keep: 10,
-    permissions: 'ugo+rX'
-  }
+  copyfiles: ['package.json', './config/*.json', 'pm2.dev.config.json']
 };
 
 gulp.task('copyfile', () => {
@@ -53,13 +41,3 @@ gulp.task('build', (callback) =>
 );
 
 gulp.task('default', (callback) => runSequence('nodemon', callback));
-
-gulp.task('deploy', (callback) =>
-  runSequence('clean', 'copyfile', 'tsc', 'release', callback)
-);
-
-try {
-  new GulpSSHDeploy(gulpConfig.sshDeploy, gulp);
-} catch (e) {
-  console.error(e);
-}
